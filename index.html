@@ -14,11 +14,14 @@
     <!-- Font Awesome -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
 
+    <!-- Arquivo JS -->
+    <script src="app.js"></script>
+
 	</head>
 
   <body>
 
-
+    <!-- NavBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-5">
       <div class="container">
         <a class="navbar-brand" href="#">
@@ -42,6 +45,7 @@
       </div>
     </nav>
 
+    <!-- Input Texto "Registro de nova despesa" -->
     <div class="container">
       <div class="row">
         <div class="col mb-5">
@@ -49,6 +53,7 @@
         </div>
       </div>
 
+      <!-- Input Ano -->
       <div class="row mb-2">
         <div class="col-md-2">
           <select class="form-control" id="ano">
@@ -57,6 +62,7 @@
           </select>
         </div>
 
+        <!-- Input Mês -->
         <div class="col-md-2">
           <select class="form-control" id="mes">
             <option value="">Mês</option>
@@ -75,10 +81,12 @@
           </select>
         </div>
         
+        <!-- Input Dia -->
         <div class="col-md-2">
           <input type="text" class="form-control" placeholder="Dia" id="dia" />
         </div>
 
+        <!-- Input Tipo -->
         <div class="col-md-6">
           <select class="form-control" id="tipo">
             <option>Tipo</option>
@@ -91,17 +99,20 @@
         </div>
       </div>
 
+      <!-- Input Descrição -->
       <div class="row">
         <div class="col-md-8">
           <input type="text" class="form-control" placeholder="Descrição" id="descricao" />
         </div>
 
+        <!-- Input Valor -->
         <div class="col-md-2">
           <input type="text" class="form-control" placeholder="Valor" id="valor" />
         </div>
 
+          <!-- Botão adicionar dispesa -->
         <div class="col-md-2 d-flex justify-content-end">
-          <button type="button" class="btn btn-primary">
+          <button type="button" class="btn btn-primary" onclick="cadastrarDispesa()">
             <i class="fas fa-plus"></i>
           </button>
         </div>
