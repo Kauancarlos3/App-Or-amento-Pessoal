@@ -41,6 +41,33 @@ class BancoDados {
 
         localStorage.setItem('id', id);
     }
+    recuperarTodosRegistros(){
+
+        //Array despesas
+        let despesas = Array()
+
+        //id do localStorage
+        let id = localStorage.getItem('id')
+
+        //recuperar todas as despesas cadastradasem localStorage
+        for (let i = 1; i <= id; i++) { 
+            //recuperar a despesa
+            let despesa = JSON.parse(localStorage.getItem(i));
+
+            despesas.push(despesa);
+
+            //existe a possibilidade de existir índices que foram pulados/removidos
+            //neste caso vamos pular esse índices
+            if(despesa === null){
+                continue
+            }           
+          }
+             return despesas;
+    }
+
+    pesquisar(despesa){
+        console.log(despesa)
+    }
 }//Gravará as despesas no localStorage
 
 let bancoDados = new BancoDados()
@@ -65,12 +92,13 @@ function cadastrarDespesa() {
 
     if (despesa.validarDados()) {
         bancoDados.gravarDespesa(despesa);//recuperamos a instacia e acessamos o método gravar 
-        document.getElementById('titulo_modal').innerHTML = 'Registro realiado com sucesso';
+        document.getElementById('titulo_modal').innerHTML = 'Registro realizado com sucesso';
         document.getElementById('modal_titulo_div').className = 'modal-header text-success';
         document.getElementById('modal_conteudo').innerHTML = 'Despesa cadastrada com sucesso!';
         document.getElementById('button_modal').innerHTML = 'Voltar'
         document.getElementById('button_modal').className = 'btn btn-success'
         $('#registraDespesa').modal('show');
+        limparDados()
     } else {
         document.getElementById('titulo_modal').innerHTML = 'Erro na inclusão do registro';
         document.getElementById('modal_titulo_div').className = 'modal-header text-danger';
@@ -82,4 +110,61 @@ function cadastrarDespesa() {
 
     }
 
+    function limparDados(){
+        let ano = document.getElementById('ano').value =''
+        let mes = document.getElementById('mes').value =''
+        let dia = document.getElementById('dia').value =''
+        let tipo = document.getElementById('tipo').value =''
+        let descricao = document.getElementById('descricao').value =''
+        let valor = document.getElementById('valor').value =''
+    }
+
+}
+
+function carregarListaDespesa(){
+    
+    let despesas = Array();
+    
+    despesas = bancoDados.recuperarTodosRegistros();
+
+    //Selecionando o tbody da tabela
+    let listaDespesas = document.getElementById('listaDespesas')
+
+    //percorer o array despesas, listando cada despesa de forma dinâmica
+    despesas.forEach(function(d) {
+     
+        //criação das linhas
+        let linha = listaDespesas.insertRow();
+
+        linha.insertCell(0).innerHTML = `${d.dia}/${d.mes}/${d.ano}`
+        switch(d.tipo){
+            case '1': d.tipo = 'Alimentação'
+            break
+            case '2': d.tipo = 'Educação'
+            break
+            case '3': d.tipo = 'Lazer'
+            break
+            case '4': d.tipo = 'Saúde'
+            break
+            case '5': d.tipo = 'Transporte'
+            break
+        }
+        linha.insertCell(1).innerHTML = d.tipo
+        linha.insertCell(2).innerHTML = d.descricao
+        linha.insertCell(3).innerHTML = d.valor
+  
+    });
+}
+
+function pesquisarDespesa(){
+    let ano = document.getElementById('ano').value 
+        let mes = document.getElementById('mes').value 
+        let dia = document.getElementById('dia').value 
+        let tipo = document.getElementById('tipo').value 
+        let descricao = document.getElementById('descricao').value 
+        let valor = document.getElementById('valor').value 
+
+        let despesa = new Despesa(ano, mes, dia, tipo, descricao, valor)
+
+        bancoDados.pesquisar(despesa)
 }
