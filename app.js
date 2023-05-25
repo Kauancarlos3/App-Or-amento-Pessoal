@@ -41,7 +41,7 @@ class BancoDados {
 
         localStorage.setItem('id', id);
     }
-    recuperarTodosRegistros(){
+    recuperarTodosRegistros() {
 
         //Array despesas
         let despesas = Array()
@@ -50,7 +50,7 @@ class BancoDados {
         let id = localStorage.getItem('id')
 
         //recuperar todas as despesas cadastradasem localStorage
-        for (let i = 1; i <= id; i++) { 
+        for (let i = 1; i <= id; i++) {
             //recuperar a despesa
             let despesa = JSON.parse(localStorage.getItem(i));
 
@@ -58,15 +58,59 @@ class BancoDados {
 
             //existe a possibilidade de existir índices que foram pulados/removidos
             //neste caso vamos pular esse índices
-            if(despesa === null){
+            if (despesa === null) {
                 continue
-            }           
-          }
-             return despesas;
+            }
+        }
+        return despesas;
     }
 
-    pesquisar(despesa){
+    pesquisar(despesa) {
+
+        let despesasFiltradas = Array()
+        despesasFiltradas = this.recuperarTodosRegistros()
+
         console.log(despesa)
+        console.log(despesasFiltradas)
+
+        //Vamos aplicar filtro em todos os campos do formulário - Ano, mês, dia... 
+
+        //ano
+        if (despesa.ano != '') {
+            console.log('filtro ano')
+            despesasFiltradas = despesasFiltradas.filter(d => d.ano == despesa.ano)
+        }
+        //mes
+        if (despesa.mes != '') {
+            console.log('filtro mes')
+            despesasFiltradas = despesasFiltradas.filter(d => d.mes == despesa.mes)
+        }
+
+        //dia
+        if (despesa.dia != '') {
+            console.log('filtro dia')
+            despesasFiltradas = despesasFiltradas.filter(d => d.dia == despesa.dia)
+        }
+
+        //tipo
+        if (despesa.tipo != '') {
+            console.log('filtro tipo')
+            despesasFiltradas = despesasFiltradas.filter(d => d.tipo == despesa.tipo)
+        }
+
+        //descricão
+        if (despesa.descricao != '') {
+            console.log('filtro descrição')
+            despesasFiltradas = despesasFiltradas.filter(d => d.descricao == despesa.descricao)
+        }
+
+        //valor
+        if (despesa.valor != '') {
+            console.log('filtro valor')
+            despesasFiltradas = despesasFiltradas.filter(d => d.valor == despesa.valor)
+        }
+
+        return despesasFiltradas
     }
 }//Gravará as despesas no localStorage
 
@@ -110,61 +154,67 @@ function cadastrarDespesa() {
 
     }
 
-    function limparDados(){
-        let ano = document.getElementById('ano').value =''
-        let mes = document.getElementById('mes').value =''
-        let dia = document.getElementById('dia').value =''
-        let tipo = document.getElementById('tipo').value =''
-        let descricao = document.getElementById('descricao').value =''
-        let valor = document.getElementById('valor').value =''
+    function limparDados() {
+        let ano = document.getElementById('ano').value = ''
+        let mes = document.getElementById('mes').value = ''
+        let dia = document.getElementById('dia').value = ''
+        let tipo = document.getElementById('tipo').value = ''
+        let descricao = document.getElementById('descricao').value = ''
+        let valor = document.getElementById('valor').value = ''
     }
 
 }
 
-function carregarListaDespesa(){
-    
-    let despesas = Array();
-    
-    despesas = bancoDados.recuperarTodosRegistros();
+function carregarListaDespesa(despesas = Array(), filtro = false) {
+
+    if(despesas.length == 0 && filtro == false){
+        despesas = bancoDados.recuperarTodosRegistros()
+    }
 
     //Selecionando o tbody da tabela
     let listaDespesas = document.getElementById('listaDespesas')
+    listaDespesas.innerHTML = ''
 
     //percorer o array despesas, listando cada despesa de forma dinâmica
-    despesas.forEach(function(d) {
-     
-        //criação das linhas
-        let linha = listaDespesas.insertRow();
+    despesas.forEach(function(d){
 
+        //criação das linhas
+        let linha = listaDespesas.insertRow()
+        
+        //criação de colunas
         linha.insertCell(0).innerHTML = `${d.dia}/${d.mes}/${d.ano}`
-        switch(d.tipo){
+
+        //ajuste do tipo
+        switch (d.tipo) {
             case '1': d.tipo = 'Alimentação'
-            break
+                break
             case '2': d.tipo = 'Educação'
-            break
+                break
             case '3': d.tipo = 'Lazer'
-            break
+                break
             case '4': d.tipo = 'Saúde'
-            break
+                break
             case '5': d.tipo = 'Transporte'
-            break
+                break
         }
         linha.insertCell(1).innerHTML = d.tipo
         linha.insertCell(2).innerHTML = d.descricao
         linha.insertCell(3).innerHTML = d.valor
-  
+
     });
 }
 
-function pesquisarDespesa(){
-    let ano = document.getElementById('ano').value 
-        let mes = document.getElementById('mes').value 
-        let dia = document.getElementById('dia').value 
-        let tipo = document.getElementById('tipo').value 
-        let descricao = document.getElementById('descricao').value 
-        let valor = document.getElementById('valor').value 
+function pesquisarDespesa() {
+    let ano = document.getElementById('ano').value
+    let mes = document.getElementById('mes').value
+    let dia = document.getElementById('dia').value
+    let tipo = document.getElementById('tipo').value
+    let descricao = document.getElementById('descricao').value
+    let valor = document.getElementById('valor').value
 
-        let despesa = new Despesa(ano, mes, dia, tipo, descricao, valor)
+    let despesa = new Despesa(ano, mes, dia, tipo, descricao, valor)
 
-        bancoDados.pesquisar(despesa)
+    let despesas = bancoDados.pesquisar(despesa)
+
+    this.carregarListaDespesa(despesas, true)
 }
